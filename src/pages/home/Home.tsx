@@ -3,64 +3,28 @@
 
 function Home() {
     return (
-        <section
-        style={{
-            backgroundColor:"#312e81",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-        }}>
-            <article
-            style={{
-                display:"grid",
-                gridTemplateColumns:"1fr 1fr",
-                color:"#fff",
-                width:"100%",
-                maxWidth:"1280px",
-            }}
+        <section 
+            className=" bg-indigo-900 flex justify-center"
+        >
+            <article 
+                className="container grid grid-cols-2 text-white"
             >
                 
                     <div
-                    style={{
-                        display:"flex",
-                        flexDirection:"column",
-                        justifyContent:"center",
-                        alignItems:"center",
-                        gap:"1rem",
-                        paddingTop:"1rem",
-                        paddingBottom:"1rem",
-
-
-                    }}
+                        className="flex flex-col justify-center items-center gap-4 py-4"
                     >
 
-                        <h2 
-                        style={{
-                            fontSize:"3rem",
-                            fontWeight:"bold",
-                       
-                        }}
-
+                        <h2
+                            className="text-5xl font-bold"
                         >Sejam Bem Vindo!!</h2>
-                        <p
-                        style={{
-                            fontSize:"1.25rem",
-                       }}
-                        >Espresse aqui seus pensamentos e opniões</p>
-                        <div
-                        style={{
-                            display:"flex",
-                            justifyContent:"space-around",
-                            gap:"1rem"
-                        }}
+                        <p 
+                            className="text-xl"
+                        >Expresse aqui seus pensamentos e opniões</p>
+                        <div 
+                            className="bg-indigo-700 px-4 py-2 rounded-lg cursor-pointer hover:bg-indigo-600 transition-colors duration-300"
                         >
-                            <div
-                            style={{
-                                borderRadius:"0.5rem",
-                                color:"white",
-                                border:"2px solid white",
-                                padding:"0.5rem 1rem",
-                            }}
+                            <div 
+                                className=" text-white  font-semibold"
                             >
                                 Nova Postagem
                             </div>
@@ -68,18 +32,13 @@ function Home() {
                     </div>
 
 
-                    <div
-                     style={{
-                        display:"flex",
-                        justifyContent:"center"
-                     }}
+                    <div 
+                        className="flex justify-center items-center"
                     >
 
                         <img src="https://i.imgur.com/fyfri1v.png"
                             alt="Imagem Página Home" 
-                            style={{
-                                width:"60%"
-                            }}
+                            className="w-2/3 h-auto"
                         />
 
 
