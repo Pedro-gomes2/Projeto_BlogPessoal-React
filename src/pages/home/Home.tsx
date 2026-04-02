@@ -11,7 +11,7 @@ function Home() {
             >
                 
                     <div
-                        className="flex flex-col justify-center items-center gap-4 py-4"
+                        className="flex flex-col justify-center items-center gap-4 py-4 "
                     >
 
                         <h2
