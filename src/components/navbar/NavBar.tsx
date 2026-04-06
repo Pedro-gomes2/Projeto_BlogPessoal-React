@@ -9,11 +9,11 @@ function NavBar() {
       </div>
       
       <ul className="flex space-x-8 font-medium">
-        <li className="hover:text-purple-300 cursor-pointer transition">Home</li>
+        
         <li className="hover:text-purple-300 cursor-pointer transition">Postagens</li>
         <li className="hover:text-purple-300 cursor-pointer transition">Temas</li>
-        <li className="hover:text-purple-300 cursor-pointer transition">Cadastro </li>
-    <li className="hover:text-purple-300 cursor-pointer transition">Perfil</li>
+        <li className="hover:text-purple-300 cursor-pointer transition">Cadastrar Tema</li>
+        <li className="hover:text-purple-300 cursor-pointer transition">Perfil</li>
       </ul>
 
       <div className="flex items-center space-x-4">
