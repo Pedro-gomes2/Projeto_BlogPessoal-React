@@ -1,83 +1,108 @@
-import React from 'react'
+import { useContext, useEffect, useState, type ChangeEvent, type SyntheticEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import type UsuarioLogin from "../../models/UsuarioLogin";
+import { AuthContext } from "../../contexts/AuthContext";
+import { ClipLoader } from "react-spinners";
+
 
 function Login() {
+
+  // Objeto responsável por redirecionar o usuário para uma outra rota
+  const navigate = useNavigate();
+
+  // Estado usuario, que vai guardar os dados do usuário que será autenticado
+  const [usuarioLogin, setUsuarioLogin] = useState<UsuarioLogin>({} as UsuarioLogin);
+
+  // Consumo do Contexto AuthContext 
+  // usamos a desestruturação para selecionar apenas o que precisamos
+  const { usuario, handleLogin, isLoading } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (usuario.token !== "") {
+      navigate("/home")
+    }
+  }, [usuario])
+
+  // Função de atualização do estado usuario
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    setUsuarioLogin({
+      ...usuarioLogin,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  function login(e: SyntheticEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleLogin(usuarioLogin);
+  }
+
+  console.log(JSON.stringify(usuarioLogin));
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-950 to-indigo-950 p-4">
-      
-      {/* Card Principal */}
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex overflow-hidden border border-white/10">
-        
-        {/* Lado Esquerdo: Formulário de Login */}
-        <div className="w-full md:w-1/2 p-8 lg:p-12">
-          <div className="mb-10 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Bem-vindo de volta</h1>
-            <p className="text-gray-500 mt-2">Acesse sua conta para continuar</p>
-          </div>
-
-          <form className="space-y-6">
-            {/* Campo Email */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">E-mail</label>
-              <input 
-                type="email" 
-                placeholder="exemplo@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-hidden transition-all bg-gray-50 focus:bg-white text-gray-900 placeholder:text-gray-400"
-              />
-            </div>
-
-            {/* Campo Senha */}
-            <div>
-              <div className="flex justify-between mb-1.5">
-                <label className="text-sm font-semibold text-gray-700">Senha</label>
-                <a href="#" className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline font-medium">Esqueceu a senha?</a>
-              </div>
-              <input 
-                type="password" 
-                placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-hidden transition-all bg-gray-50 focus:bg-white text-gray-900 placeholder:text-gray-400"
-              />
-            </div>
-
-            {/* Checkbox Lembrar-me */}
-            <div className="flex items-center">
-              <input type="checkbox" id="remember" className="w-4 h-4 text-indigo-600 border-gray-300 rounded-sm focus:ring-indigo-500 accent-indigo-600" />
-              <label htmlFor="remember" className="ml-2 text-sm text-gray-600">Lembrar de mim</label>
-            </div>
-
-            {/* Botão de Entrar */}
-            <button 
-              type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-100 hover:shadow-indigo-200 transition-all active:scale-98 cursor-pointer"
-            >
-              Entrar na conta
-            </button>
-          </form>
-
-          {/* Rodapé do Login */}
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center relative z-20">
-            <p className="text-sm text-gray-500">
-              Ainda não tem conta? <a href="#" className="text-indigo-600 font-bold hover:text-indigo-500 hover:underline relative z-30">Cadastre-se</a>
-            </p>
-          </div>
-        </div>
-
-        {/* Lado Direito: Imagem Decorativa (Manteve-se limpa) */}
-        <div className="hidden md:block md:w-1/2 relative bg-indigo-50">
-            {/* Overlay com gradiente sobre a imagem - tons de indigo escuro */}
-            <div className="absolute inset-0 bg-linear-to-t from-indigo-950/70 to-transparent z-10"></div>
-            <img 
-                src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=800" 
-                alt="Escritório moderno" 
-                className="w-full h-full object-cover"
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold ">
+        <form className="flex justify-center items-center flex-col w-1/2 gap-4"
+          onSubmit={login}
+        >
+          <h2 className="text-slate-900 text-5xl ">Entrar</h2>
+          <div className="flex flex-col w-full">
+            <label htmlFor="usuario">Usuário</label>
+            <input
+              type="text"
+              id="usuario"
+              name="usuario"
+              placeholder="Usuario"
+              className="border-2 border-slate-700 rounded p-2"
+              value={usuarioLogin.usuario}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
             />
-            <div className="absolute bottom-10 left-10 z-20 text-white p-4">
-                <p className="text-xl font-light italic leading-relaxed">"A melhor forma de prever o futuro é criá-lo."</p>
-            </div>
-        </div>
-        
+          </div>
+          <div className="flex flex-col w-full">
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Senha"
+              className="border-2 border-slate-700 rounded p-2"
+              value={usuarioLogin.senha}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
+            />
+          </div>
+          <button
+            type='submit'
+            className="rounded bg-indigo-400 flex justify-center
+                                   hover:bg-indigo-900 text-white w-1/2 py-2">
+            {
+              isLoading ?
+
+                <ClipLoader
+                  color="#ffffff"
+                  size={24}
+                />
+
+                :
+
+                <span>Entrar</span>
+
+            }
+          </button>
+
+          <hr className="border-slate-800 w-full" />
+
+          <p>
+            Ainda não tem uma conta?{' '}
+            <Link to="/cadastro" className="text-indigo-800 hover:underline">
+              Cadastre-se
+            </Link>
+          </p>
+        </form>
+        <div className="bg-[url('https://i.imgur.com/ZZFAmzo.jpg')] lg:block hidden bg-no-repeat 
+                            w-full min-h-screen bg-cover bg-center"
+        ></div>
       </div>
-    </div>
-  )
+    </>
+  );
 }
 
-export default Login
+export default Login;
