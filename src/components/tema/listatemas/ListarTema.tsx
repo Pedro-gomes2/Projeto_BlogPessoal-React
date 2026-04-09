@@ -5,47 +5,33 @@ import type Tema from "../../../models/Tema";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { buscar } from "../../../services/Service";
 import { SyncLoader } from "react-spinners";
+import { ToastAlerta } from "../../../util/ToastAlerta";
 
 function ListaTemas() {
 
-    // Objeto responsável por redirecionar o usuário para uma outra rota
     const navigate = useNavigate();
-
-    // Estado para controlar o Loader (animação de carregamento)
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    // Estado que irá receber todos os temas persistidos no Backend
     const [temas, setTemas] = useState<Tema[]>([]);
-
-    // Acessa o token do usuário autenticado
     const { usuario, handleLogout } = useContext(AuthContext);
-
-    // Cria um objeto para armazenar o token
     const token = usuario.token;
 
-    // Cria um useEffect para monitorar o token
     useEffect(() => {
         if (token === '') {
-            alert('Você precisa estar logado!');
+            ToastAlerta('Você precisa estar logado!', 'info');
             navigate('/')
         }
     }, [token])
 
-    // Cria um useEffect para inicializar a função buscarTemas
     useEffect(() => {
         buscarTemas();
     }, [temas.length])
 
-    // Função para buscar todos os temas no backend
     async function buscarTemas() {
         try {
-
             setIsLoading(true);
-
             await buscar('/temas', setTemas, {
                 headers: { Authorization: token }
             });
-
         } catch (error: any) {
             if (error.toString().includes('401')) {
                 handleLogout();
@@ -56,40 +42,52 @@ function ListaTemas() {
     }
 
     return (
-        <>
-            {
-                isLoading && (
-                    <div className="flex justify-center w-full my-8">
-                        <SyncLoader
-                            color="#312e81"
-                            size={32}
-                        />
+        /* Abaixo aplicamos o fundo exato da imagem: 
+           bg-[#020617] é o azul 'estante' profundo.
+        */
+        <div className="min-h-screen bg-[#020617] flex flex-col items-center">
+            
+            {/* Loader customizado para não quebrar a imersão */}
+            {isLoading && (
+                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020617]/80 backdrop-blur-sm">
+                    <SyncLoader
+                        color="#a855f7" // Roxo Neon
+                        size={15}
+                    />
+                    <span className="font-mono text-purple-400 text-xs mt-4 animate-pulse uppercase tracking-widest">
+                        Carregando_Módulos...
+                    </span>
+                </div>
+            )}
+
+            <div className="container flex flex-col py-12 px-6">
+                
+                {/* Cabeçalho da Seção */}
+                <div className="mb-12 font-mono">
+                    <h2 className="text-3xl font-black text-white uppercase tracking-tighter">
+                        ./listar Temas<span className="text-purple-500 animate-pulse">_</span>
+                    </h2>
+                    <div className="h-1 w-20 bg-purple-600 mt-2 rounded-full shadow-[0_0_10px_#a855f7]"></div>
+                </div>
+
+                {/* Estado Vazio estilizado */}
+                {(!isLoading && temas.length === 0) && (
+                    <div className="mx-auto mt-20 p-12 bg-white/5 border border-dashed border-white/10 rounded-[3rem] text-center">
+                        <p className="text-slate-400 font-mono">
+                            [!] Nenhum tema mapeado no sistema.
+                        </p>
                     </div>
-                )
-            }
+                )}
 
-            <div className="flex justify-center w-full px-4 my-4">
-                <div className="container flex flex-col">
-
-                    {
-                        (!isLoading && temas.length === 0) && (
-                            <span className="text-3xl text-center my-8">
-                                Nenhum Tema foi encontrado!
-                            </span>
-                        )
-                    }
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 
-                                    lg:grid-cols-3 gap-8">
-                        {
-                            temas.map((tema) => (
-                                <CardTema key={tema.id} tema={tema} />
-                            ))
-                        }
-                    </div>
+                {/* Grid de Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {temas.map((tema) => (
+                        <CardTema key={tema.id} tema={tema} />
+                    ))}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
+
 export default ListaTemas;

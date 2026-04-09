@@ -1,46 +1,70 @@
 import { Link } from "react-router-dom"
 import type Postagem from "../../../models/Postagem"
 
-
 interface CardPostagensProps {
     postagem: Postagem
 }
 
 function CardPostagem({ postagem }: CardPostagensProps) {
     return (
-        <div className='border-slate-900 border 
-            flex flex-col rounded overflow-hidden justify-between'>
+        <div className='flex flex-col rounded-2xl overflow-hidden justify-between 
+                        bg-slate-900/40 backdrop-blur-md 
+                        border border-white/10 shadow-xl 
+                        transition-all duration-300 hover:scale-[1.02] hover:border-cyan-500/30'>
                 
             <div>
-                <div className="flex w-full bg-indigo-400 py-2 px-4 items-center gap-4">
+                {/* Header do Card - Estilo "Terminal Header" */}
+                <div className="flex w-full bg-white/5 py-3 px-4 items-center gap-4 border-b border-white/10">
                     <img
                         src={postagem.usuario?.foto}
-                        className='h-12 rounded-full'
+                        className='h-10 w-10 rounded-full border-2 border-cyan-500/50 object-cover'
                         alt={postagem.usuario?.nome} />
-                    <h3 className='text-lg font-bold text-center uppercase'>
-                        {postagem.usuario?.nome}
-                    </h3>
+                    <div className="flex flex-col">
+                        <h3 className='text-sm font-mono font-bold text-white leading-none'>
+                            {postagem.usuario?.nome}
+                        </h3>
+                        <span className="text-[10px] font-mono text-cyan-400">status: online</span>
+                    </div>
                 </div>
-                <div className='p-4 '>
-                    <h4 className='text-lg font-semibold uppercase'>{postagem.titulo}</h4>
-                    <p>{postagem.texto}</p>
-                    <p>Tema: {postagem.tema?.descricao}</p>
-                    <p>Data: {new Intl.DateTimeFormat("pt-BR", {
-                        dateStyle: 'full',
-                        timeStyle: 'medium',
-                    }).format(new Date(postagem.data))}</p>
+
+                {/* Conteúdo - Estilo Code Snippet */}
+                <div className='p-6 font-mono'>
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="text-pink-500 text-xs font-bold">Título:</span>
+                        <h4 className='text-lg font-bold text-slate-100 uppercase tracking-tight'>
+                            {postagem.titulo}
+                        </h4>
+                    </div>
+                    
+                    <p className="text-slate-300 text-sm mb-4 leading-relaxed bg-black/20 p-3 rounded-lg border border-white/5">
+                        {postagem.texto}
+                    </p>
+                    
+                    <div className="space-y-1">
+                        <p className="text-xs text-slate-400">
+                            <span className="text-cyan-400">tema:</span> "{postagem.tema?.descricao}"
+                        </p>
+                        <p className="text-[10px] text-slate-500 italic">
+                            /* {new Intl.DateTimeFormat("pt-BR", {
+                                dateStyle: 'full',
+                                timeStyle: 'short',
+                            }).format(new Date(postagem.data))} */
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div className="flex">
+
+            {/* Ações - Botões Estilizados */}
+            <div className="flex border-t border-white/10">
                 <Link to={`/editarpostagem/${postagem.id}`} 
-                    className='w-full text-white bg-indigo-400 
-                    hover:bg-indigo-800 flex items-center justify-center py-2'>
-                    <button>Editar</button>
+                    className='w-full text-cyan-400 py-3 flex items-center justify-center 
+                               hover:bg-cyan-500/10 transition-all font-mono text-xs font-bold border-r border-white/10'>
+                    Editar Postagem
                 </Link>
                 <Link to={`/deletarpostagem/${postagem.id}`} 
-                    className='text-white bg-red-400 
-                    hover:bg-red-700 w-full flex items-center justify-center'>
-                    <button>Deletar</button>
+                    className='w-full text-red-400 py-3 flex items-center justify-center 
+                               hover:bg-red-500/10 transition-all font-mono text-xs font-bold'>
+                    Deletar Postagem
                 </Link>
             </div>
         </div>

@@ -6,245 +6,237 @@ import type Usuario from "../../models/Usuario"
 import { atualizar, buscar } from "../../services/Service"
 import { ToastAlerta } from "../../util/ToastAlerta"
 
-
 function AtualizarPerfil() {
-	
-	const navigate = useNavigate()
+    
+    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [user, setUser] = useState<Usuario>({} as Usuario)
+    const [confirmarSenha, setConfirmarSenha] = useState<string>("")
+    
+    const { usuario, handleLogout } = useContext(AuthContext)
+    const token = usuario.token
+    const id: string = usuario.id.toString()
 
-	const [isLoading, setIsLoading] = useState<boolean>(false)
-	
-	const [user, setUser] = useState<Usuario>({} as Usuario)
-	const [confirmarSenha, setConfirmarSenha] = useState<string>("")
-	
-	const { usuario, handleLogout } = useContext(AuthContext)
-	const token = usuario.token
-	const id: string = usuario.id.toString()
+    async function buscarUsuarioPorId() {
+        try {
+            await buscar(`/usuarios/${id}`, setUser, {
+                headers: { Authorization: token },
+            })
+            setUser((user) => ({ ...user, senha: "" }))
+            setConfirmarSenha("")
+        } catch (error: any) {
+            if (error.toString().includes("401")) {
+                handleLogout()
+            } else {
+                ToastAlerta("Usuário não encontrado!", "erro")
+                retornar()
+            }
+        }
+    }
 
-	async function buscarUsuarioPorId() {
-		try {
-			await buscar(`/usuarios/${id}`, setUser, {
-				headers: {
-					Authorization: token,
-				},
-			})
+    useEffect(() => {
+        if (token === "") {
+            ToastAlerta("Você precisa estar logado!", "info")
+            navigate("/")
+        }
+    }, [token])
 
-			setUser((user) => ({ ...user, senha: "" }))
-			setConfirmarSenha("")
-			
-		} catch (error: any) {
-			if (error.toString().includes("401")) {
-				handleLogout()
-			} else {
-				ToastAlerta("Usuário não encontrado!", "erro")
-				retornar()
-			}
-		}
-	}
+    useEffect(() => {
+        if (id !== undefined) {
+            buscarUsuarioPorId()
+        }
+    }, [id])
 
-	useEffect(() => {
-		if (token === "") {
-			ToastAlerta("Você precisa estar logado!", "info")
-			navigate("/")
-		}
-	}, [token])
+    function retornar() {
+        navigate("/perfil")
+    }
 
-	useEffect(() => {
-		setUser({} as Usuario)
-		setConfirmarSenha("")
-		setIsLoading(false)
-	}, [])
+    function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+        setUser({
+            ...user,
+            [e.target.name]: e.target.value,
+        })
+    }
 
-	useEffect(() => {
-		if (id !== undefined) {
-			buscarUsuarioPorId()
-		}
-	}, [id])
+    function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
+        setConfirmarSenha(e.target.value)
+    }
 
-	function retornar() {
-		navigate("/perfil")
-	}
+    async function atualizarUsuario(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        setIsLoading(true)
 
-	function sucesso() {
-		handleLogout()
-	}
+        if (confirmarSenha === user.senha && user.senha.length >= 8) {
+            try {
+                await atualizar(`/usuarios/atualizar`, user, setUser, {
+                    headers: { Authorization: token },
+                })
+                ToastAlerta("Usuário atualizado! Efetue o Login Novamente!", "sucesso")
+                handleLogout()
+            } catch (error: any) {
+                if (error.toString().includes("401")) {
+                    handleLogout()
+                } else {
+                    ToastAlerta("Erro ao atualizar o usuário!", "erro")
+                }
+            }
+        } else {
+            ToastAlerta("Dados inconsistentes. Verifique a senha (mínimo 8 caracteres).", "erro")
+            setUser({ ...user, senha: "" })
+            setConfirmarSenha("")
+        }
+        setIsLoading(false)
+    }
 
-	function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
-		setUser({
-			...user,
-			[e.target.name]: e.target.value,
-		})
-	}
+    return (
+        <div className="min-h-screen bg-[#020617] text-slate-300 font-mono py-12 px-4 relative overflow-hidden">
+            
+            {/* Decorativo de fundo */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-	function handleConfirmarSenha(e: ChangeEvent<HTMLInputElement>) {
-		setConfirmarSenha(e.target.value)
-	}
+            <div className="container mx-auto max-w-5xl relative z-10">
+                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_2fr]">
+                        
+                        {/* Seção Lateral (Preview) */}
+                        <div className="bg-gradient-to-b from-cyan-600/20 to-slate-900 p-8 flex flex-col items-center justify-center border-r border-white/5">
+                            <div className="relative group">
+                                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                                <img
+                                    src={user.foto || "https://i.imgur.com/Ih0Uf9u.png"}
+                                    alt={user.nome}
+                                    className="relative w-40 h-40 object-cover rounded-full border-2 border-white/20 shadow-2xl"
+                                />
+                                <div className="absolute bottom-2 right-2 bg-cyan-500 p-2 rounded-full shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-white">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 className="text-white text-xl font-bold mt-6 tracking-tighter text-center">{user.nome}</h2>
+                            <p className="text-cyan-400/60 text-xs mt-1 uppercase tracking-widest">{user.usuario}</p>
+                            
+                            <div className="mt-8 w-full space-y-2 opacity-50 text-[10px]">
+                                <p>// system_log: ready</p>
+                                <p>// id: {usuario.id}</p>
+                                <p>// status: editing_mode</p>
+                            </div>
+                        </div>
 
-	async function atualizarUsuario(e: FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		setIsLoading(true)
+                        {/* Seção do Formulário */}
+                        <div className="p-8 lg:p-12 bg-black/20">
+                            <header className="mb-10">
+                                <h1 className="text-3xl font-extrabold text-white tracking-tighter">
+                                    Informações do Perfil
+                                </h1>
+                                <p className="text-slate-500 text-sm mt-2 font-mono">Atualize suas credenciais de acesso ao terminal.</p>
+                            </header>
 
-		if (confirmarSenha === user.senha && user.senha.length >= 8) {
-			try {
-				await atualizar(`/usuarios/atualizar`, user, setUser, {
-					headers: {
-						Authorization: token,
-					},
-				})
-				ToastAlerta("Usuário atualizado! Efetue o Login Novamente!", "sucesso")
-				sucesso()
-			} catch (error: any) {
-				if (error.toString().includes("401")) {
-					handleLogout()
-				} else {
-					ToastAlerta("Erro ao atualizar o usuário!", "erro")
-					retornar()
-				}
-			}
-		} else {
-			ToastAlerta("Dados inconsistentes. Verifique as informações do usuário.", "erro")
-			setUser({ ...user, senha: "" })
-			setConfirmarSenha("")
-		}
-		
-		setIsLoading(false)
-	}
+                            <form onSubmit={atualizarUsuario} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="nome" className="text-xs text-cyan-400 font-bold uppercase">Nome :</label>
+                                        <input
+                                            type="text"
+                                            id="nome"
+                                            name="nome"
+                                            placeholder="Nome"
+                                            className="bg-black/40 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
+                                            value={user.nome || ""}
+                                            onChange={atualizarEstado}
+                                            required
+                                        />
+                                    </div>
 
-	return (
-		<div className="min-h-screen bg-gray-50 py-12 px-4">
-			<div className="container mx-auto max-w-7xl">
-				<div className="bg-white rounded-lg shadow-lg overflow-hidden">
-					<div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr]">
-						{/* Seção da foto */}
-						<div className="bg-indigo-500 p-8 flex flex-col items-center justify-center">
-							<div className="relative">
-								<img
-									src={user.foto}
-									alt={user.nome}
-									className="w-48 h-48 object-cover rounded-full border-4 border-white shadow-lg"
-								/>
-							</div>
-							<h2 className="text-white text-2xl font-bold mt-6 text-center">{user.nome}</h2>
-							<p className="text-indigo-100 text-base mt-2">{user.usuario}</p>
-						</div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="usuario" className="text-xs text-slate-500 font-bold uppercase">Email :</label>
+                                        <input
+                                            type="email"
+                                            id="usuario"
+                                            name="usuario"
+                                            className="bg-slate-800/30 border border-white/5 rounded-xl p-3 text-slate-500 cursor-not-allowed italic"
+                                            disabled
+                                            value={user.usuario || ""}
+                                        />
+                                    </div>
+                                </div>
 
-						{/* Seção do formulário */}
-						<div className="p-8 lg:p-12">
-							<h1 className="text-4xl text-center my-2">
-								Editar Perfil
-							</h1>
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="foto" className="text-xs text-cyan-400 font-bold uppercase">Foto de Perfil :</label>
+                                    <input
+                                        type="url"
+                                        id="foto"
+                                        name="foto"
+                                        placeholder="URL da foto"
+                                        className="bg-black/40 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
+                                        value={user.foto || ""}
+                                        onChange={atualizarEstado}
+                                        required
+                                    />
+                                </div>
 
-							<form onSubmit={atualizarUsuario} className="space-y-4">
-								<div className="flex flex-col">
-									<label htmlFor="nome" className="font-bold mb-1">
-										Nome
-									</label>
-									<input
-										type="text"
-										id="nome"
-										name="nome"
-										placeholder="Nome"
-										className="px-4 py-2 border-2 border-slate-700 rounded focus:outline-none"
-										value={user.nome || ""}
-										onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-										required
-									/>
-								</div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="senha" className="text-xs text-cyan-400 font-bold uppercase">Nova Senha :</label>
+                                        <input
+                                            type="password"
+                                            id="senha"
+                                            name="senha"
+                                            placeholder="Mínimo 8 caracteres"
+                                            className="bg-black/40 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
+                                            value={user.senha || ""}
+                                            onChange={atualizarEstado}
+                                            required
+                                            minLength={8}
+                                        />
+                                    </div>
 
-								<div className="flex flex-col">
-									<label htmlFor="usuario" className="font-bold mb-1">
-										Usuario
-									</label>
-									<input
-										type="email"
-										id="usuario"
-										name="usuario"
-										placeholder="Usuario"
-										className="px-4 py-2 border-2 border-slate-700 rounded bg-gray-100 cursor-not-allowed"
-										disabled
-										value={user.usuario || ""}
-										onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-									/>
-								</div>
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="confirmarSenha" className="text-xs text-cyan-400 font-bold uppercase">Confirmar Senha :</label>
+                                        <input
+                                            type="password"
+                                            id="confirmarSenha"
+                                            name="confirmarSenha"
+                                            placeholder="Repita a senha"
+                                            className="bg-black/40 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500/50 transition-all shadow-inner"
+                                            value={confirmarSenha}
+                                            onChange={handleConfirmarSenha}
+                                            required
+                                            minLength={8}
+                                        />
+                                    </div>
+                                </div>
 
-								<div className="flex flex-col">
-									<label htmlFor="foto" className="font-bold mb-1">
-										Foto
-									</label>
-									<input
-										type="url"
-										id="foto"
-										name="foto"
-										placeholder="Foto"
-										className="px-4 py-2 border-2 border-slate-700 rounded focus:outline-none"
-										value={user.foto || ""}
-										onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-										required
-									/>
-								</div>
+                                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                                    <button
+                                        type="button"
+                                        onClick={retornar}
+                                        className="flex-1 rounded-xl px-4 py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all font-bold uppercase text-sm"
+                                    >
+                                        Cancelar
+                                    </button>
 
-								<div className="flex flex-col">
-									<label htmlFor="senha" className="font-bold mb-1">
-										Senha
-									</label>
-									<input
-										type="password"
-										id="senha"
-										name="senha"
-										placeholder="Senha"
-										className="px-4 py-2 border-2 border-slate-700 rounded focus:outline-none"
-										value={user.senha || ""}
-										onChange={(e: ChangeEvent<HTMLInputElement>) => atualizarEstado(e)}
-										required
-										minLength={8}
-									/>
-								</div>
-
-								<div className="flex flex-col">
-									<label htmlFor="confirmarSenha" className="font-bold mb-1">
-										Confirmar Senha
-									</label>
-									<input
-										type="password"
-										id="confirmarSenha"
-										name="confirmarSenha"
-										placeholder="Confirmar Senha"
-										className="px-4 py-2 border-2 border-slate-700 rounded focus:outline-none"
-										value={confirmarSenha}
-										onChange={(e: ChangeEvent<HTMLInputElement>) => handleConfirmarSenha(e)}
-										required
-										minLength={8}
-									/>
-								</div>
-
-								<div className="flex justify-around gap-8 pt-4">
-									<button
-										type="button"
-										className="rounded text-white bg-red-400 hover:bg-red-700 w-1/2 py-2 font-bold"
-										onClick={retornar}
-									>
-										Cancelar
-									</button>
-
-									<button
-										type="submit"
-										className="rounded text-white bg-indigo-400 hover:bg-indigo-900 
-												   w-1/2 py-2 flex justify-center font-bold"
-										disabled={isLoading}
-									>
-										{isLoading ? (
-											<ClipLoader color="#ffffff" size={24} />
-										) : (
-											<span>Atualizar</span>
-										)}
-									</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	)
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="flex-1 rounded-xl px-4 py-3 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500 hover:text-white transition-all duration-300 font-bold uppercase text-sm flex justify-center items-center shadow-lg shadow-cyan-500/10"
+                                    >
+                                        {isLoading ? (
+                                            <ClipLoader color="#22d3ee" size={20} />
+                                        ) : (
+                                            <span>Atualizar Perfil</span>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default AtualizarPerfil

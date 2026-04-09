@@ -1,0 +1,13 @@
+/* ModalPostagem.css */
+.popup-content {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 90% !important;
+    max-width: 650px !important;
+}
+
+.popup-overlay {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(4px);
+}
