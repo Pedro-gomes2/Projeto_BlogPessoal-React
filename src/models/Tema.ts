@@ -1,7 +1,7 @@
 import type Postagem from "./Postagem";
 
 export default interface Tema {
-    id:Number;
-    descricao:String;
+    id:number;
+    descricao:string;
     postagem?: Postagem[] | null;
 }

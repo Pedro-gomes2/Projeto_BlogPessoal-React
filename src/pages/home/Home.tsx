@@ -1,37 +1,42 @@
+
+
+import ListaPostagens from "../../components/postagem/listapostagens/ListaPostagens"
+
+import ModalPostagem from "../../components/postagem/modalpostagem/ModalPostagem"
+
 function Home() {
-    return (
-        <>
-            <div className="bg-indigo-900 flex justify-center">
-                <div className='container grid grid-cols-1 md:grid-cols-2 text-white'>
+	return (
+		<>
+			{/* Container */}
+			<div className="bg-indigo-900 flex justify-center">
+				{/* Grid que divide a tela em 2 colunas */}
+				<div className="container grid grid-cols-1 sm:grid-cols-2 text-white">
+					{/* Coluna esquerda */}
+					<div className="flex flex-col gap-4 items-center justify-center py-4">
+						<h2 className="text-5xl font-bold">Seja Bem Vindo!</h2>
+						<p className="text-xl">Expresse aqui seus pensamentos e opiniões</p>
 
-                    <div className="flex justify-center pb-4 md:pb-0 order-first md:order-last">
-                        <img
-                            src="https://i.imgur.com/fyfri1v.png"
-                            alt="Imagem Página Home"
-                            className='w-1/2 md:w-2/3'
-                        />
-                    </div>
+						{/* Link/Botão */}
+						<div className="flex justify-around gap-4">
+                            
+                            <ModalPostagem />
 
-                    <div className="flex flex-col gap-4 items-center justify-center py-4 text-center md:text-left order-last md:order-first">
-                        <h2 className='text-3xl md:text-5xl font-bold'>
-                            Seja Bem Vindo!
-                        </h2>
-                        <p className='text-base md:text-xl'>
-                            Expresse aqui seus pensamentos e opniões
-                        </p>
-
-                        <div className="flex justify-around gap-4">
-                            <div className='rounded text-white 
-                                            border-white border-solid border-2 py-2 px-4'>
-                                Nova Postagem
-                            </div>
                         </div>
-                    </div>
+					</div>
 
-                </div>
-            </div>
-        </>
-    )
+					{/* Coluna Direita */}
+					<div className="flex justify-center">
+						<img
+							src="https://ik.imagekit.io/adb7vrzkj/projeto2/Gemini_Generated_Image_dssx30dssx30dssx.png"
+							alt="Imagem da Página Home"
+							className="w-2/3"
+						/>
+					</div>
+				</div>
+			</div>
+			<ListaPostagens />
+		</>
+	)
 }
 
 export default Home

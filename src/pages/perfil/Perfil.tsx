@@ -2,7 +2,8 @@ import { useContext, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import { AuthContext } from "../../contexts/AuthContext"
-import { ToastAlerta } from "../../utils/ToastAlerta"
+import { ToastAlerta } from "../../util/ToastAlerta"
+
 
 function Perfil() {
 	const navigate = useNavigate()

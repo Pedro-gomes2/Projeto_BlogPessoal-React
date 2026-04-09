@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { AuthContext } from "../../../contexts/AuthContext";
-import type Postagem from "../../../models/Postagem";
 import type Tema from "../../../models/Tema";
+import type Postagem from "../../../models/Postagem";
+import { AuthContext } from "../../../contexts/AuthContext";
 import { atualizar, buscar, cadastrar } from "../../../services/Service";
-import { ToastAlerta } from "../../../utils/ToastAlerta";
+import { ToastAlerta } from "../../../util/ToastAlerta";
 
 
 function FormPostagem() {
@@ -16,7 +16,7 @@ function FormPostagem() {
 
     const [temas, setTemas] = useState<Tema[]>([])
 
-    const [tema, setTema] = useState<Tema>({ id: 0, descricao: '', })
+    const [tema, setTema] = useState<Tema>({ id: 0, descricao: '', postagem: [] })
     
     const [postagem, setPostagem] = useState<Postagem>({} as Postagem)
 

@@ -4,7 +4,7 @@ import { AuthContext } from "../../../contexts/AuthContext"
 import type Postagem from "../../../models/Postagem"
 import { buscar, deletar } from "../../../services/Service"
 import { ClipLoader } from "react-spinners"
-import { ToastAlerta } from "../../../utils/ToastAlerta"
+import { ToastAlerta } from "../../../util/ToastAlerta"
 
 
 function DeletarPostagem() {

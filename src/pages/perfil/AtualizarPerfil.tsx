@@ -4,7 +4,8 @@ import { ClipLoader } from "react-spinners"
 import { AuthContext } from "../../contexts/AuthContext"
 import type Usuario from "../../models/Usuario"
 import { atualizar, buscar } from "../../services/Service"
-import { ToastAlerta } from "../../utils/ToastAlerta"
+import { ToastAlerta } from "../../util/ToastAlerta"
+
 
 function AtualizarPerfil() {
 	

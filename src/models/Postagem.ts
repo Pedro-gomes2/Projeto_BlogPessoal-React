@@ -2,10 +2,10 @@ import type Tema from "./Tema";
 import type Usuarios from "./Usuario";
 
 export default interface Postagem {
-    id:Number;
-    titulo:String;
-    texto:String;
-    data:String;
+    id:number;
+    titulo:string;
+    texto:string;
+    data:string;
     tema:Tema | null;
     usuario:Usuarios | null;
 }
