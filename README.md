@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+🚀 Blog.Dev // Sistema de Gerenciamento de Conteúdo
+O Blog.Dev é uma plataforma de blog moderna, desenvolvida com foco na experiência do desenvolvedor. O projeto utiliza uma interface baseada em Glassmorphism e estética Cyberpunk/Dark Mode, integrando um sistema completo de CRUD para postagens e temas.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+📸 Interface do Sistema
+A interface foi projetada para simular um ambiente de desenvolvimento (IDE).
 
-Currently, two official plugins are available:
+Responsividade: Adaptado para dispositivos móveis e desktops.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🛠️ Tecnologias Utilizadas
+Frontend
+React 18: Biblioteca principal para construção da interface.
 
-## React Compiler
+TypeScript: Tipagem estática para maior segurança e produtividade.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Tailwind CSS: Framework de estilização utilitária para design moderno.
 
-## Expanding the ESLint configuration
+React Router Dom: Gerenciamento de rotas e navegação.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Context API: Gerenciamento de estado global e autenticação.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Axios: Consumo de APIs REST.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+React Spinners & Toastify: Feedback visual e notificações para o usuário.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+⚙️ Funcionalidades
+Autenticação
+[x] Login de usuário com persistência de Token (JWT).
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+[x] Cadastro de novos usuários.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+[x] Proteção de rotas (apenas usuários logados acessam o painel).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Gerenciamento de Temas (Categorias)
+[x] Listagem de temas em grid.
+
+[x] Criação de novos temas com estética de configuração .cfg.
+
+[x] Edição de temas existentes.
+
+[x] Exclusão de temas com confirmação de segurança (Critical Operation).
+
+Gerenciamento de Postagens
+[x] Feed de notícias dinâmico.
+
+[x] CRUD completo de postagens vinculadas a temas.
+
+🚀 Como Executar o Projeto
+Bash
+# 1. Clone o repositório
+git clone https://github.com/Pedro-gomes2/Projeto_BlogPessoal-React
+
+# 2. Acesse a pasta do projeto
+cd blog-dev
+
+# 3. Instale as dependências
+npm install
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
+Nota: Certifique-se de configurar as variáveis de ambiente no arquivo .env para apontar para a URL correta do seu Backend.
+
+📂 Estrutura de Pastas (Principais)
+Plaintext
+src/
+ ├── components/       # Componentes reutilizáveis (Navbar, Footer, Cards)
+ ├── contexts/         # Contextos da aplicação (AuthContext)
+ ├── models/           # Interfaces e Tipagens (Postagem, Tema, Usuario)
+ ├── pages/            # Páginas principais da aplicação
+ ├── services/         # Configurações do Axios e chamadas à API
+ └── util/             # Utilitários (Notificações, Validadores)
+👨‍💻 Autor
+Desenvolvido por João Pedro.
+Conecte-se comigo:https://www.linkedin.com/in/jo%C3%A3o-pedro-oliveira-95b003255
+
+📝 Licença
+Este projeto está sob a licença MIT.
