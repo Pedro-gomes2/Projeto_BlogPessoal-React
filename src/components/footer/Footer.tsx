@@ -1,18 +1,16 @@
-import React, { use, useContext, type ReactNode } from 'react';
+import React from 'react';
 import { GithubLogo, InstagramLogo, LinkedinLogo } from '@phosphor-icons/react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
 
 function Footer() {
   let data = new Date().getFullYear();
 
-<<<<<<< HEAD
   return (
-    // Removido o roxo sólido. Agora usa o fundo escuro do site com padding.
+    
     <footer className="w-full bg-[#020410] border-t border-white/5 py-12 font-mono">
       <div className="container mx-auto flex flex-col items-center">
         
-        {/* Card Estilo Glass (Igual aos seus cards de postagem) */}
+        
         <div className="bg-slate-900/40 backdrop-blur-md border border-white/10 p-8 rounded-[2rem] flex flex-col items-center w-full max-w-2xl shadow-2xl">
           
           <p className="text-xl font-bold text-white mb-2 tracking-tighter">
@@ -23,7 +21,7 @@ function Footer() {
             Acessem as Minhas redes sociais
           </p>
           
-          {/* Ícones com hover neon */}
+        
           <div className="flex space-x-8">
             <Link 
               to="https://www.linkedin.com/in/joão-pedro-oliveira-95b003255/" 
@@ -50,7 +48,7 @@ function Footer() {
             </Link>
           </div>
           
-          {/* Barra de progresso decorativa igual a da Home */}
+         
           <div className="mt-8 w-full max-w-xs h-[1px] bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
           
         </div>
@@ -62,46 +60,6 @@ function Footer() {
       </div>
     </footer>
   );
-=======
-  const { usuario } = useContext(AuthContext);
-
-  let component: ReactNode
-
-  if (usuario.token !== "") {
-
-    component = (
-
-      <footer className="bg-[#2D2A8E] text-white py-8">
-        <div className="container mx-auto flex flex-col items-center">
-          <p className="text-lg font-semibold mb-4">
-            Blog Pessoal | Copyright: {data}
-          </p>
-          <p className="text-sm mb-6">Acesse minhas redes sociais</p>
-
-          <div className="flex space-x-6">
-            <Link to="https://www.linkedin.com/in/joão-pedro-oliveira-95b003255/" target="_blank">
-              <LinkedinLogo size={32} weight="thin" className="hover:text-purple-400 cursor-pointer transition" />
-            </Link>
-            <Link to="https://www.instagram.com/gomes.pedro2/" target="_blank">
-              <InstagramLogo href='https://www.instagram.com/gomes.pedro2/' size={32} weight="thin" className="hover:text-purple-400 cursor-pointer transition" />
-            </Link>
-            <Link to="https://github.com/Pedro-gomes2" target="_blank">
-              <GithubLogo href='https://github.com/Pedro-gomes2' size={32} weight="thin" className="hover:text-purple-400 cursor-pointer transition" />
-            </Link>
-          </div>
-        </div>
-      </footer>
-    )
-
-  }
-
-  return (
-    <>
-      {component}
-    </>
-  )
-
->>>>>>> main
 }
 
 export default Footer;
